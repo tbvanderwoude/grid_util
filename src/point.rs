@@ -5,6 +5,8 @@ use std::cmp::{max, Ordering};
 use std::convert::{From, TryFrom};
 use std::ops;
 
+/// 2D (grid) point with integer coordinates [x](Self::x) and [y](Self::y). It has member functions for many common
+/// operations such as computing the [manhattan distance](Self::manhattan_distance) as well as operator implementations for easy arithmetic.
 #[derive(Clone, Copy, Debug, Ord, PartialOrd, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Point {
     pub x: i32,

@@ -1,5 +1,4 @@
 use std::convert::TryFrom;
-
 use crate::point::Point;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -8,6 +7,7 @@ use serde::{Deserialize, Serialize};
 
 use strum_macros::EnumIter;
 
+/// Represents 8 possible directions as well as a [NONE](Self::NONE) direction.
 #[derive(
     Clone,
     Copy,

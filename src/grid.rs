@@ -2,6 +2,8 @@ use crate::point::Point;
 use crate::rect::Rect;
 use serde::{Deserialize, Serialize};
 
+/// The [Grid] trait abstracts over containers of [Clone] and [Copy] items laid out in a rectangle
+/// with a certain [width](Self::width) and [height](Self::height).
 pub trait Grid<T: Clone + Copy> {
     // Static method signature; `Self` refers to the implementor type.
     fn new(width: usize, height: usize, default_value: T) -> Self;
@@ -46,6 +48,7 @@ pub trait Grid<T: Clone + Copy> {
     }
 }
 
+/// Optimized (binary) implementation of a [Grid] of [bool]'s.
 #[derive(Clone, Default, Serialize, Deserialize, Debug)]
 pub struct BoolGrid {
     pub width: usize,
@@ -95,6 +98,7 @@ impl BoolGrid {
     }
 }
 
+/// Generic [Grid] implementation for [Clone] and [Copy] items.
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 pub struct SimpleGrid<T: Clone + Copy> {
     pub width: usize,

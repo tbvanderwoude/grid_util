@@ -8,6 +8,7 @@ use ron::ser::{to_string_pretty, PrettyConfig};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
+/// Reads file in `/resources` folder and deserializes it using [serde].
 pub fn read_deserializable<T: DeserializeOwned>(file_name: PathBuf) -> T {
     let path = path::PathBuf::from("./resources/").join(file_name);
     let mut file = match File::open(&path) {
@@ -28,6 +29,7 @@ pub fn read_deserializable<T: DeserializeOwned>(file_name: PathBuf) -> T {
     data
 }
 
+/// Serializes object using [serde] and writes to file in `/resources` folder.
 pub fn write_serializable(data: &impl Serialize, file_name: PathBuf) {
     let serialization_config = PrettyConfig::new()
         .with_depth_limit(2)

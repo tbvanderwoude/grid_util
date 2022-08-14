@@ -2,6 +2,7 @@ use crate::point::Point;
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
+/// 2D rectangle.
 #[derive(Clone, Copy, PartialEq, Serialize, Deserialize, Debug)]
 pub struct Rect {
     pub x1: i32,
