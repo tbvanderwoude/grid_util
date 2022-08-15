@@ -8,9 +8,9 @@ pub mod grid;
 pub mod point;
 pub mod rect;
 
-pub use grid::Grid;
-pub use grid::BoolGrid;
-pub use grid::SimpleGrid;
 pub use direction::Direction;
+pub use grid::BoolGrid;
+pub use grid::Grid;
+pub use grid::SimpleGrid;
 pub use point::Point;
 pub use rect::Rect;
