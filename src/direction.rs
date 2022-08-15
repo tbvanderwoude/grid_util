@@ -38,21 +38,28 @@ pub enum Direction {
 }
 
 impl Direction {
+    /// A direction is diagonal if it is [NORTHEAST](Self::NORTHEAST), [SOUTHEAST](Self::SOUTHEAST),
+    ///  [SOUTHWEST](Self::SOUTHWEST) or [NORTHWEST](Self::NORTHWEST)
     pub fn diagonal(&self) -> bool {
         self.num() % 2 == 1
     }
-    pub fn discrete_angle(&self, other: Direction) -> i32 {
-        (other.num() - self.num()).rem_euclid(8)
-    }
+    /// Computes a direction to its numerical representation, [NORTH](Self::NORTH) being 0 and going
+    /// clockwise.
     pub fn num(&self) -> i32 {
         (*self).into()
     }
+    /// Compute the discrete angle between two directions based on their numerical representation.
+    pub fn discrete_angle(&self, other: Direction) -> i32 {
+        (other.num() - self.num()).rem_euclid(8)
+    }
+    /// Rotate clockwise by a number of 'eights' of a full rotation.
     pub fn rotate_cw(&self, eights: i32) -> Direction {
         match self {
             Direction::NONE => Direction::NONE,
             _ => Direction::try_from((self.num() + eights).rem_euclid(8)).unwrap(),
         }
     }
+    /// Rotate counter-clockwise by a number of 'eights' of a full rotation.
     pub fn rotate_ccw(&self, eights: i32) -> Direction {
         match self {
             Direction::NONE => Direction::NONE,

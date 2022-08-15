@@ -17,21 +17,26 @@ pub trait Grid<T: Clone + Copy> {
     fn set(&mut self, x: usize, y: usize, value: T);
     fn width(&self) -> usize;
     fn height(&self) -> usize;
+    /// Gets the index corresponding to a coordinate, which is row-wise. Can be used in some
+    /// implementations to directly index into the grid-representation.
     fn get_ix(&self, x: usize, y: usize) -> usize {
         x + y * self.width()
     }
     fn get_ix_point(&self, point: &Point) -> usize {
         self.get_ix(point.x as usize, point.y as usize)
     }
+    /// Tests whether a point is in bounds.
     fn point_in_bounds(&self, point: Point) -> bool {
         point.x >= 0
             && point.y >= 0
             && point.x < self.width() as i32
             && point.y < self.height() as i32
     }
+    /// Tests whether an index is in bounds.
     fn index_in_bounds(&self, x: usize, y: usize) -> bool {
         x < self.width() && y < self.height()
     }
+    /// Sets a given rectangle on the grid to the value.
     fn set_rectangle(&mut self, rect: &Rect, value: T) {
         for x in rect.x1..rect.x2 {
             for y in rect.y1..rect.y2 {
@@ -39,10 +44,11 @@ pub trait Grid<T: Clone + Copy> {
             }
         }
     }
+    /// Retrieves the rectangle corresponding to the grid dimensions at the origin.
     fn rect(&self) -> Rect {
         Rect::new(0, 0, self.width() as i32, self.height() as i32)
     }
-
+    /// Retrieves a column-wise vector of grid values in the given rectangle.
     fn get_rect(&self, rect: Rect) -> Vec<T> {
         rect.points_in()
             .into_iter()

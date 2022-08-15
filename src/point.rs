@@ -17,6 +17,7 @@ impl Point {
     pub fn new(x: i32, y: i32) -> Point {
         Point { x, y }
     }
+    /// Compares this to another point and gives a direction from this to the other.
     pub fn dir_obj(&self, other: &Point) -> Direction {
         match self.x.cmp(&other.x) {
             Ordering::Greater => match self.y.cmp(&other.y) {
@@ -36,30 +37,34 @@ impl Point {
             },
         }
     }
+
+    /// Like [dir_obj](Self::dir_obj) but directly translates the [Direction] back to a point which
+    /// can be used like a delta.
     pub fn dir(&self, other: &Point) -> Point {
         Point::from(self.dir_obj(other))
     }
 
+    /// Gives the direction in which the given point is as seen from the origin.
     pub fn abs_dir(&self) -> Direction {
         Point::new(0, 0).dir_obj(&self)
     }
 
-    ///L-1 norm. As a grid-pathfinding heuristic it represents number of moves on a uniform cost 4-connected grid.
+    /// L-1 norm. As a grid-pathfinding heuristic it represents number of moves on a uniform cost 4-connected grid.
     pub fn manhattan_distance(&self, other: &Point) -> i32 {
         (other.x - self.x).abs() + (other.y - self.y).abs()
     }
 
-    ///L-inf norm. As a grid-pathfinding heuristic it represents number of moves on a uniform cost 8-connected grid.
+    /// L-inf norm. As a grid-pathfinding heuristic it represents number of moves on a uniform cost 8-connected grid.
     pub fn move_distance(&self, other: &Point) -> i32 {
         max((other.x - self.x).abs(), (other.y - self.y).abs())
     }
 
-    ///L-2 norm
+    /// L-2 norm.
     pub fn euclidean_distance(&self, other: &Point) -> f32 {
         ((other.x - self.x).pow(2) as f32 + (other.y - self.y).pow(2) as f32).sqrt()
     }
 
-    ///Neighbours on a 4-connected grid
+    /// Neighbours on a 4-connected grid.
     pub fn neumann_neighborhood(&self) -> Vec<Point> {
         vec![
             Point::new(self.x + 1, self.y),
@@ -69,11 +74,13 @@ impl Point {
         ]
     }
 
+    /// Retrieves a single neighbour on an 8-connected grid, with the indexing used being similar
+    /// to that in [Direction].
     pub fn moore_neighbor(&self, dir_num: i32) -> Point {
         *self + Direction::try_from(dir_num.rem_euclid(8)).unwrap()
     }
 
-    ///Neighbours on an 8-connected grid
+    /// Neighbours on an 8-connected grid.
     pub fn moore_neighborhood(&self) -> Vec<Point> {
         vec![
             Point::new(self.x, self.y + 1),
@@ -86,11 +93,15 @@ impl Point {
             Point::new(self.x - 1, self.y + 1),
         ]
     }
+
+    /// Alternative neighborhood, takes a square of a given size centered around self.
     pub fn general_moore_neighborhood(&self, size: i32) -> Vec<Point> {
         let mut neigh = vec![];
         for x in self.x - size..=(self.x + size) {
             for y in self.y - size..=(self.y + size) {
-                neigh.push(Point::new(x, y))
+                if x != self.x || y != self.y {
+                    neigh.push(Point::new(x, y));
+                }
             }
         }
         neigh
