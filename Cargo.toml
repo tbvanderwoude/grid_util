@@ -1,6 +1,6 @@
 [package]
 name = "grid_util"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Thom van der Woude <tbvanderwoude@protonmail.com>"]
 edition = "2021"
 description = "Utilities and primitive constructs like Grid, Point, Rect, etc."
@@ -8,6 +8,7 @@ keywords = ["grid","utility","rectangle","point"]
 categories = ["game-development","simulation"]
 license = "MIT"
 repository = "https://github.com/tbvanderwoude/grid_util"
+readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
