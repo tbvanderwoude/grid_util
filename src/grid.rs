@@ -1,3 +1,4 @@
+//! [Grid] trait abstracting over grid-like containers along with two implementors [BoolGrid] and [SimpleGrid].
 use crate::point::Point;
 use crate::rect::Rect;
 use serde::{Deserialize, Serialize};
@@ -17,8 +18,7 @@ pub trait Grid<T: Clone + Copy> {
     fn set(&mut self, x: usize, y: usize, value: T);
     fn width(&self) -> usize;
     fn height(&self) -> usize;
-    /// Gets the index corresponding to a coordinate, which is row-wise. Can be used in some
-    /// implementations to directly index into the grid-representation.
+    /// Gets the index corresponding to a coordinate, which is row-wise.
     fn get_ix(&self, x: usize, y: usize) -> usize {
         x + y * self.width()
     }
@@ -57,7 +57,7 @@ pub trait Grid<T: Clone + Copy> {
     }
 }
 
-/// Optimized (binary) implementation of a [Grid] of [bool]'s.
+/// Compact bitwise implementation of a [Grid] of [bool]'s.
 #[derive(Clone, Default, Serialize, Deserialize, Debug)]
 pub struct BoolGrid {
     pub width: usize,

@@ -1,9 +1,16 @@
 //! # grid_util
 //!
-//! Collection of utility constructs like [Grid](grid::Grid)'s, [Point](point::Point)'s, [Rect](rect::Rect)'s, etc. Also includes some miscellaneous logic
-//! like [serde] file IO helper functions.
+//! Collection of utility constructs like [Grid](grid::Grid)'s, [Point](point::Point)'s, [Rect](rect::Rect)'s, etc.
+//! All are geared towards a 2D grid with integer coordinates.
 
 pub mod direction;
 pub mod grid;
 pub mod point;
 pub mod rect;
+
+pub use grid::Grid;
+pub use grid::BoolGrid;
+pub use grid::SimpleGrid;
+pub use direction::Direction;
+pub use point::Point;
+pub use rect::Rect;

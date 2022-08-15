@@ -1,3 +1,5 @@
+//! Discrete [Direction] construct useful in grid-based algorithms and things like roguelikes.
+
 use crate::point::Point;
 use std::convert::TryFrom;
 
@@ -39,16 +41,17 @@ pub enum Direction {
 
 impl Direction {
     /// A direction is diagonal if it is [NORTHEAST](Self::NORTHEAST), [SOUTHEAST](Self::SOUTHEAST),
-    ///  [SOUTHWEST](Self::SOUTHWEST) or [NORTHWEST](Self::NORTHWEST)
+    ///  [SOUTHWEST](Self::SOUTHWEST) or [NORTHWEST](Self::NORTHWEST).
     pub fn diagonal(&self) -> bool {
         self.num() % 2 == 1
     }
-    /// Computes a direction to its numerical representation, [NORTH](Self::NORTH) being 0 and going
+    /// Converts a direction to its numerical representation, [NORTH](Self::NORTH) being 0 and going
     /// clockwise.
     pub fn num(&self) -> i32 {
         (*self).into()
     }
-    /// Compute the discrete angle between two directions based on their numerical representation.
+    /// Compute the discrete angle between two directions based on their respective numerical
+    /// representations.
     pub fn discrete_angle(&self, other: Direction) -> i32 {
         (other.num() - self.num()).rem_euclid(8)
     }

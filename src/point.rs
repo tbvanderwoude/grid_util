@@ -1,3 +1,5 @@
+//! 2D grid [Point] with an expressive API and overloaded operators.
+
 use crate::direction::Direction;
 use core::fmt;
 use serde::*;
@@ -17,7 +19,7 @@ impl Point {
     pub fn new(x: i32, y: i32) -> Point {
         Point { x, y }
     }
-    /// Compares this to another point and gives a direction from this to the other.
+    /// Compares this to another point and gives the direction the other is in seen from this point.
     pub fn dir_obj(&self, other: &Point) -> Direction {
         match self.x.cmp(&other.x) {
             Ordering::Greater => match self.y.cmp(&other.y) {

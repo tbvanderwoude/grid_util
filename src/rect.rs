@@ -1,3 +1,5 @@
+//! Discrete 2D [Rect] with support for some common operations like splitting and intersections tests.
+
 use crate::point::Point;
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
@@ -30,7 +32,7 @@ impl Rect {
     pub fn height(&self) -> i32 {
         self.y2 - self.y1
     }
-    /// Retrieves a column-wise list of integer points which are enclosed in the rectangle.
+    /// Retrieves a column-wise list of integer points which are enclosed by the rectangle.
     pub fn points_in(&self) -> Vec<Point> {
         let mut vec = vec![];
         for x in self.x1..=self.x2 {
@@ -90,7 +92,7 @@ impl Rect {
     pub fn contains(&self, point: &Point) -> bool {
         self.x1 <= point.x && point.x <= self.x2 && self.y1 <= point.y && point.y <= self.y2
     }
-    /// Computes the center of the rectangle, rounding down.
+    /// Computes the center of the rectangle using integer arithmetic (rounds down).
     pub fn center(&self) -> Point {
         Point::new((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2)
     }
