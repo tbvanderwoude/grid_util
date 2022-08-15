@@ -1,5 +1,5 @@
-use std::convert::TryFrom;
 use crate::point::Point;
+use std::convert::TryFrom;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use rand_derive2::RandGen;

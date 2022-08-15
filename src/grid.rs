@@ -20,6 +20,9 @@ pub trait Grid<T: Clone + Copy> {
     fn get_ix(&self, x: usize, y: usize) -> usize {
         x + y * self.width()
     }
+    fn get_ix_point(&self, point: &Point) -> usize {
+        self.get_ix(point.x as usize, point.y as usize)
+    }
     fn point_in_bounds(&self, point: Point) -> bool {
         point.x >= 0
             && point.y >= 0

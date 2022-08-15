@@ -11,7 +11,6 @@ pub mod io;
 pub mod point;
 pub mod rect;
 
-
 /// Takes a primary and secondary [Ordering] and evaluates it to a single [Ordering] ([Source](https://stackoverflow.com/questions/40369255/reverse-specific-key-when-sorting-with-multiple-keys)).
 pub fn chain_ordering(o1: Ordering, o2: Ordering) -> Ordering {
     match o1 {
