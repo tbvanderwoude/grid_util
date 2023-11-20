@@ -37,7 +37,7 @@ pub trait ValueGrid<T: Clone + Copy> {
         x < self.width() && y < self.height()
     }
     /// Sets a given rectangle on the grid to the value.
-    fn set_rectangle(&mut self, rect: &Rect, value: T) {
+    fn set_rect(&mut self, rect: Rect, value: T) {
         for x in rect.x1..rect.x2 {
             for y in rect.y1..rect.y2 {
                 self.set(x as usize, y as usize, value);
@@ -61,9 +61,11 @@ pub trait ValueGrid<T: Clone + Copy> {
 /// with a certain [width](Self::width) and [height](Self::height). Elements are
 /// accessed by reference using [get](Self::get), [get_mut](Self::get_mut) and
 /// related functions.
-pub trait Grid<T: Clone> {
+pub trait Grid<T> {
     // Static method signature; `Self` refers to the implementor type.
-    fn new(width: usize, height: usize, default_value: T) -> Self;
+    fn new(width: usize, height: usize, default_value: T) -> Self
+    where
+        T: Clone;
     fn get(&self, x: usize, y: usize) -> Option<&T>;
     fn get_point(&self, point: Point) -> Option<&T> {
         self.get(point.x as usize, point.y as usize)
@@ -94,7 +96,7 @@ pub trait Grid<T: Clone> {
         let w = self.width();
         let i = ix % w;
         let j = ix / w;
-        self.set(i,j, value);
+        self.set(i, j, value);
     }
     fn width(&self) -> usize;
     fn height(&self) -> usize;
@@ -117,7 +119,10 @@ pub trait Grid<T: Clone> {
         x < self.width() && y < self.height()
     }
     /// Sets a given rectangle on the grid to the value.
-    fn set_rectangle(&mut self, rect: &Rect, value: T) {
+    fn set_rect(&mut self, rect: Rect, value: T)
+    where
+        T: Clone,
+    {
         for p in rect.points_in() {
             if let Some(r) = self.get_point_mut(p) {
                 *r = value.clone();
@@ -129,7 +134,10 @@ pub trait Grid<T: Clone> {
         Rect::new(0, 0, self.width() as i32, self.height() as i32)
     }
     /// Retrieves a column-wise vector of grid values in the given rectangle.
-    fn get_rect(&self, rect: Rect) -> Vec<T> {
+    fn get_rect(&self, rect: Rect) -> Vec<T>
+    where
+        T: Clone,
+    {
         rect.points_in()
             .into_iter()
             .map(|p| self.get_point(p))
@@ -138,16 +146,19 @@ pub trait Grid<T: Clone> {
     }
 }
 
-/// Generic [Grid] implementation for [Clone] items.
-#[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct SimpleGrid<T: Clone> {
+/// Generic [Grid] implementation.
+#[derive(Serialize, Deserialize, Default, Debug)]
+pub struct SimpleGrid<T> {
     pub width: usize,
     pub height: usize,
     pub values: Vec<T>,
 }
 
-impl<T: Clone> Grid<T> for SimpleGrid<T> {
-    fn new(width: usize, height: usize, default_value: T) -> Self {
+impl<T> Grid<T> for SimpleGrid<T> {
+    fn new(width: usize, height: usize, default_value: T) -> Self
+    where
+        T: Clone,
+    {
         let symbols = vec![default_value; width * height];
         SimpleGrid {
             width,
@@ -158,16 +169,14 @@ impl<T: Clone> Grid<T> for SimpleGrid<T> {
     fn get(&self, x: usize, y: usize) -> Option<&T> {
         if self.index_in_bounds(x, y) {
             Some(&self.values[x + y * self.width])
-        }
-        else{
+        } else {
             None
         }
     }
     fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
         if self.index_in_bounds(x, y) {
             Some(&mut self.values[x + y * self.width])
-        }
-        else{
+        } else {
             None
         }
     }
