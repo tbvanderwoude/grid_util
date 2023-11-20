@@ -45,7 +45,7 @@ impl Rect {
     /// Splits the rectangle at a given x-coordinate relative to the rectangle, returning a pair of
     /// rectangles.
     pub fn split_x(&self, x: i32) -> (Rect, Rect) {
-        return (
+        (
             Rect::new(self.x1, self.y1, x, self.height()),
             Rect::new(
                 self.x1 + x + 1,
@@ -53,12 +53,12 @@ impl Rect {
                 self.width() - x - 1,
                 self.height(),
             ),
-        );
+        )
     }
     /// Splits the rectangle at a given y-coordinate relative to the rectangle, returning a pair of
     /// rectangles.
     pub fn split_y(&self, y: i32) -> (Rect, Rect) {
-        return (
+        (
             Rect::new(self.x1, self.y1, self.width(), y),
             Rect::new(
                 self.x1,
@@ -66,7 +66,7 @@ impl Rect {
                 self.width(),
                 self.height() - y - 1,
             ),
-        );
+        )
     }
     /// Gives the rectangle enclosed by this rectangle.
     pub fn inner_rect(&self) -> Rect {

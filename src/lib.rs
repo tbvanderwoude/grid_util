@@ -12,5 +12,7 @@ pub use direction::Direction;
 pub use grid::BoolGrid;
 pub use grid::Grid;
 pub use grid::SimpleGrid;
+pub use grid::SimpleValueGrid;
+pub use grid::ValueGrid;
 pub use point::Point;
 pub use rect::Rect;

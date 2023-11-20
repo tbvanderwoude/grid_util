@@ -48,7 +48,7 @@ impl Point {
 
     /// Gives the direction in which the given point is as seen from the origin.
     pub fn abs_dir(&self) -> Direction {
-        Point::new(0, 0).dir_obj(&self)
+        Point::new(0, 0).dir_obj(self)
     }
 
     /// L-1 norm. As a grid-pathfinding heuristic it represents number of moves on a uniform cost 4-connected grid.
