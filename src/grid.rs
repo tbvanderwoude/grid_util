@@ -183,6 +183,12 @@ impl<T> Grid<T> for SimpleGrid<T> {
     }
 }
 
+impl<T: Clone> Clone for SimpleGrid<T> {
+    fn clone(&self) -> Self {
+        Self { width: self.width.clone(), height: self.height.clone(), values: self.values.clone() }
+    }
+}
+
 /// Compact bitwise implementation of a [ValGrid] of [bool]'s.
 #[derive(Clone, Default, Serialize, Deserialize, Debug)]
 pub struct BoolGrid {
@@ -232,6 +238,7 @@ impl BoolGrid {
         }
     }
 }
+
 
 /// Generic [ValueGrid] implementation for [Clone] and [Copy] items.
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
