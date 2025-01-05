@@ -11,6 +11,9 @@ repository = "https://github.com/tbvanderwoude/grid_util"
 readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+smallvec = ["dep:smallvec"]
+
 [dependencies]
 rand = "^0.8"
 ron = "0.6.2"
@@ -19,3 +22,4 @@ strum = "^0.20"
 strum_macros = "^0.20"
 rand_derive2 = "^0.1"
 serde = { version = "^1", features = ["serde_derive"] }
+smallvec = { version = "1.13.2", optional = true}

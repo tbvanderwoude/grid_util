@@ -3,6 +3,8 @@
 use crate::direction::Direction;
 use core::fmt;
 use serde::*;
+#[cfg(feature = "smallvec")]
+use smallvec::{smallvec, SmallVec};
 use std::cmp::{max, Ordering};
 use std::convert::{From, TryFrom};
 use std::ops;
@@ -66,6 +68,12 @@ impl Point {
         ((other.x - self.x).pow(2) as f32 + (other.y - self.y).pow(2) as f32).sqrt()
     }
 
+    /// Retrieves a single neighbour on an 8-connected grid, with the indexing used being similar
+    /// to that in [Direction].
+    pub fn moore_neighbor(&self, dir_num: i8) -> Point {
+        *self + Direction::try_from(dir_num.rem_euclid(8)).unwrap()
+    }
+
     /// Neighbours on a 4-connected grid.
     pub fn neumann_neighborhood(&self) -> Vec<Point> {
         vec![
@@ -76,15 +84,56 @@ impl Point {
         ]
     }
 
-    /// Retrieves a single neighbour on an 8-connected grid, with the indexing used being similar
-    /// to that in [Direction].
-    pub fn moore_neighbor(&self, dir_num: i32) -> Point {
-        *self + Direction::try_from(dir_num.rem_euclid(8)).unwrap()
+    /// Neighbours on a 4-connected grid.
+    pub fn neumann_neighborhood_array(&self) -> [Point; 4] {
+        [
+            Point::new(self.x + 1, self.y),
+            Point::new(self.x, self.y + 1),
+            Point::new(self.x - 1, self.y),
+            Point::new(self.x, self.y - 1),
+        ]
     }
 
+    #[cfg(feature = "smallvec")]
+    /// Neighbours on a 4-connected grid.
+    pub fn neumann_neighborhood_smallvec(&self) -> SmallVec<[Point; 8]> {
+        smallvec![
+            Point::new(self.x + 1, self.y),
+            Point::new(self.x, self.y + 1),
+            Point::new(self.x - 1, self.y),
+            Point::new(self.x, self.y - 1),
+        ]
+    }
     /// Neighbours on an 8-connected grid.
     pub fn moore_neighborhood(&self) -> Vec<Point> {
         vec![
+            Point::new(self.x, self.y + 1),
+            Point::new(self.x + 1, self.y + 1),
+            Point::new(self.x + 1, self.y),
+            Point::new(self.x + 1, self.y - 1),
+            Point::new(self.x, self.y - 1),
+            Point::new(self.x - 1, self.y - 1),
+            Point::new(self.x - 1, self.y),
+            Point::new(self.x - 1, self.y + 1),
+        ]
+    }
+    /// Neighbours on an 8-connected grid.
+    pub fn moore_neighborhood_array(&self) -> [Point; 8] {
+        [
+            Point::new(self.x, self.y + 1),
+            Point::new(self.x + 1, self.y + 1),
+            Point::new(self.x + 1, self.y),
+            Point::new(self.x + 1, self.y - 1),
+            Point::new(self.x, self.y - 1),
+            Point::new(self.x - 1, self.y - 1),
+            Point::new(self.x - 1, self.y),
+            Point::new(self.x - 1, self.y + 1),
+        ]
+    }
+    #[cfg(feature = "smallvec")]
+    /// Neighbours on a 4-connected grid.
+    pub fn moore_neighborhood_smallvec(&self) -> SmallVec<[Point; 8]> {
+        smallvec![
             Point::new(self.x, self.y + 1),
             Point::new(self.x + 1, self.y + 1),
             Point::new(self.x + 1, self.y),
