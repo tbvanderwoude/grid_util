@@ -12,19 +12,33 @@ pub trait ValueGrid<T: Clone + Copy> {
     fn get_point(&self, point: Point) -> T {
         self.get(point.x, point.y)
     }
+    fn get_ix(&self, ix: usize) -> T {
+        let w = self.width();
+        let i = ix % w;
+        let j = ix / w;
+        self.get(i as i32, j as i32)
+    }
+    fn get_ix_point(&self, point: &Point) -> usize {
+        self.compute_ix(point.x, point.y)
+    }
+    /// Gets the index corresponding to a coordinate, which is row-wise.
+    fn compute_ix(&self, x: i32, y: i32) -> usize {
+        x as usize + (y as usize) * self.width()
+    }
+
+    fn set(&mut self, x: i32, y: i32, value: T);
     fn set_point(&mut self, point: Point, value: T) {
         self.set(point.x, point.y, value);
     }
-    fn set(&mut self, x: i32, y: i32, value: T);
+    fn set_ix(&mut self, ix: usize, value: T) {
+        let w = self.width();
+        let i = ix % w;
+        let j = ix / w;
+        self.set(i as i32, j as i32, value);
+    }
     fn width(&self) -> usize;
     fn height(&self) -> usize;
-    /// Gets the index corresponding to a coordinate, which is row-wise.
-    fn get_ix(&self, x: i32, y: i32) -> usize {
-        x as usize + (y as usize) * self.width()
-    }
-    fn get_ix_point(&self, point: &Point) -> usize {
-        self.get_ix(point.x, point.y)
-    }
+
     /// Tests whether a point is in bounds.
     fn point_in_bounds(&self, point: Point) -> bool {
         self.index_in_bounds(point.x, point.y)
@@ -35,10 +49,8 @@ pub trait ValueGrid<T: Clone + Copy> {
     }
     /// Sets a given rectangle on the grid to the value.
     fn set_rect(&mut self, rect: Rect, value: T) {
-        for x in rect.x1..rect.x2 {
-            for y in rect.y1..rect.y2 {
-                self.set(x, y, value);
-            }
+        for p in rect.points_in() {
+            self.set_point(p, value);
         }
     }
     /// Retrieves the rectangle corresponding to the grid dimensions at the origin.
@@ -73,6 +85,13 @@ pub trait Grid<T> {
         let j = ix / w;
         self.get(i as i32, j as i32)
     }
+    fn get_ix_point(&self, point: &Point) -> usize {
+        self.compute_ix(point.x, point.y)
+    }
+    /// Gets the index corresponding to a coordinate, which is row-wise.
+    fn compute_ix(&self, x: i32, y: i32) -> usize {
+        x as usize + y as usize * self.width()
+    }
     fn get_mut(&mut self, x: i32, y: i32) -> Option<&mut T>;
     fn get_point_mut(&mut self, point: Point) -> Option<&mut T> {
         self.get_mut(point.x, point.y)
@@ -97,13 +116,7 @@ pub trait Grid<T> {
     }
     fn width(&self) -> usize;
     fn height(&self) -> usize;
-    /// Gets the index corresponding to a coordinate, which is row-wise.
-    fn compute_ix(&self, x: i32, y: i32) -> usize {
-        x as usize + y as usize * self.width()
-    }
-    fn get_ix_point(&self, point: &Point) -> usize {
-        self.compute_ix(point.x, point.y)
-    }
+
     /// Tests whether a point is in bounds.
     fn point_in_bounds(&self, point: Point) -> bool {
         self.index_in_bounds(point.x, point.y)
@@ -185,7 +198,11 @@ impl<T> Grid<T> for SimpleGrid<T> {
 
 impl<T: Clone> Clone for SimpleGrid<T> {
     fn clone(&self) -> Self {
-        Self { width: self.width.clone(), height: self.height.clone(), values: self.values.clone() }
+        Self {
+            width: self.width.clone(),
+            height: self.height.clone(),
+            values: self.values.clone(),
+        }
     }
 }
 
@@ -208,11 +225,11 @@ impl ValueGrid<bool> for BoolGrid {
         }
     }
     fn get(&self, x: i32, y: i32) -> bool {
-        let ix = self.get_ix(x, y);
+        let ix = self.compute_ix(x, y);
         (self.values[ix / 64] & (1 << (ix % 64))) != 0
     }
     fn set(&mut self, x: i32, y: i32, value: bool) {
-        let ix = self.get_ix(x, y);
+        let ix = self.compute_ix(x, y);
         if value {
             self.values[ix / 64] |= 1 << (ix % 64);
         } else {
@@ -239,7 +256,6 @@ impl BoolGrid {
     }
 }
 
-
 /// Generic [ValueGrid] implementation for [Clone] and [Copy] items.
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 pub struct SimpleValueGrid<T: Clone + Copy> {
@@ -258,10 +274,10 @@ impl<T: Clone + Copy> ValueGrid<T> for SimpleValueGrid<T> {
         }
     }
     fn get(&self, x: i32, y: i32) -> T {
-        self.values[self.get_ix(x, y)]
+        self.values[self.compute_ix(x, y)]
     }
     fn set(&mut self, x: i32, y: i32, value: T) {
-        let ix = self.get_ix(x, y);
+        let ix = self.compute_ix(x, y);
         self.values[ix] = value;
     }
 
