@@ -70,7 +70,7 @@ impl Point {
 
     /// Retrieves a single neighbour on an 8-connected grid, with the indexing used being similar
     /// to that in [Direction].
-    pub fn moore_neighbor(&self, dir_num: i8) -> Point {
+    pub fn moore_neighbor(&self, dir_num: i32) -> Point {
         *self + Direction::try_from(dir_num.rem_euclid(8)).unwrap()
     }
 
