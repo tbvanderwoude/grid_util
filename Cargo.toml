@@ -1,6 +1,6 @@
 [package]
 name = "grid_util"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Thom van der Woude <tbvanderwoude@protonmail.com>"]
 edition = "2021"
 description = "Utilities and primitive constructs like Grid, Point, Rect, etc."
